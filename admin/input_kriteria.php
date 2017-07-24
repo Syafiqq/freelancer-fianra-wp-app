@@ -96,10 +96,11 @@
 							</div>
 							<script type="text/javascript">    
 								<?php echo $jsArray; ?>  
-								function changeValue(nik){  
-								document.getElementById('nama').value = dtguru[nik].nama;  
-								};  
-							</script> 
+								function changeValue(nik){
+                                    document.getElementById('nama').value = dtguru[nik].nama;
+
+                                }
+                            </script>
 					</div>
 					<div class="form-group">
 						<label for="focusedinput" class="col-sm-2 control-label">Nilai C1. Absensi</label>
