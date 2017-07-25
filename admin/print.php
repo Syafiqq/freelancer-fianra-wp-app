@@ -112,6 +112,7 @@
                                         {
                                             mysql_connect("localhost", "root", "");
                                             mysql_select_db("guru_wp");
+                                            error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                             $query = mysql_query("SELECT id FROM result WHERE id={$_POST['result']}");
                                             if (!empty(mysql_fetch_array($query)))
                                             {
@@ -133,6 +134,7 @@
                 {
                     mysql_connect("localhost", "root", "");
                     mysql_select_db("guru_wp");
+                    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                     $query = mysql_query("SELECT id FROM result WHERE id={$_POST['result']}");
                     if (!empty(mysql_fetch_array($query)))
                     {
@@ -146,6 +148,7 @@
                                         <?php
                                         mysql_connect("localhost", "root", "");
                                         mysql_select_db("guru_wp");
+                                        error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                         $query = mysql_query("SELECT `id`, `timestamp`, `cr1`, `cr2`, `cr3`, `cr4`, `cr5`, `cc1`, `cc2`, `cc3`, `cc4`, `cc5` FROM result WHERE id={$_POST['result']}");
                                         $result = mysql_fetch_assoc($query);
                                         if (isset($result))
@@ -227,6 +230,7 @@
                                                 $result = array();
                                                 mysql_connect("localhost", "root", "");
                                                 mysql_select_db("guru_wp");
+                                                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                                 $query = mysql_query("SELECT `result_kriteria`.`result`, `result_kriteria`.`nik`, `guru`.`nama`, `result_kriteria`.`c1`, `result_kriteria`.`c2`, `result_kriteria`.`c3`, `result_kriteria`.`c4`, `result_kriteria`.`c5`, `result_kriteria`.`res`, `result_kriteria`.`rnk` FROM `result_kriteria` LEFT OUTER JOIN `guru` ON `result_kriteria`.`nik` = `guru`.`nik` WHERE `result_kriteria`.`result`={$_POST['result']} ORDER BY `guru`.`nik` ASC");
                                                 while ($data = mysql_fetch_assoc($query))
                                                 {

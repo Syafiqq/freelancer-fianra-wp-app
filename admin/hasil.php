@@ -355,6 +355,7 @@
 							  ) AS GRANDTOTAL
 
 							  FROM kriteria");
+                                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                 $q = mysql_fetch_array($query);
                                 ?>
                                 <?php
