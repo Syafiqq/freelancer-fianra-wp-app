@@ -584,7 +584,7 @@
             console.log(result);
             $.ajax({
                 type: 'post',
-                url: '/admin/submit.php',
+                url: 'submit.php',
                 data: result,
                 dataType: 'json'
             }).done(function (response) {
