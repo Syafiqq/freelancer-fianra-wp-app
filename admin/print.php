@@ -75,374 +75,241 @@
                 <li class="breadcrumb-item">
                     <a href="index.php">Home</a>
                     <i class="fa fa-angle-right"></i>
-                    Hasil
+                    Laporan
                 </li>
             </ol>
-
-            <textarea id="printing-css" style="display:none;">.no-print{display:none}</textarea>
-            <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
-            <script type="text/javascript">
-                //<![CDATA[
-                function printDiv(elementId)
-                {
-                    var a = document.getElementById('printing-css').value;
-                    var b = document.getElementById(elementId).innerHTML;
-                    window.frames["print_frame"].document.title = document.title;
-                    window.frames["print_frame"].document.body.innerHTML = '<style>' + a + '</style>' + b;
-                    window.frames["print_frame"].window.focus();
-                    window.frames["print_frame"].window.print();
-                }
-
-                //]]>
-            </script>
 
             <!--pilih bobot-->
             <div class="grid-form1">
                 <div class="tab-content">
                     <div class="tab-pane active" id="horizontal-form">
-                        <h3 align="center">Pilih Bobot</h3>
-                        <div>
-                            <h5>* Bobot 1 = Sangat Rendah</h5>
-                            <h5>* Bobot 2 = Rendah</h5>
-                            <h5>* Bobot 3 = Cukup</h5>
-                            <h5>* Bobot 4 = Tinggi</h5>
-                            <h5>* Bobot 5 = Sangat Tinggi</h5>
-                        </div>
-                        <form action="hasil.php" method="post" class="form-horizontal">
+                        <form method="post" class="form-horizontal">
                             <div class="form-group">
-                                <label for="focusedinput" class="col-sm-2 control-label">C1. Absensi</label>
+                                <label for="focusedinput" class="col-sm-2 control-label">Waktu Perhitungan</label>
                                 <div class="col-sm-8">
-                                    <select name="bobot_c1" class="form-control">
-                                        <option value="1">Bobot 1</option>
-                                        <option value="2">Bobot 2</option>
-                                        <option value="3">Bobot 3</option>
-                                        <option value="4">Bobot 4</option>
-                                        <option value="5">Bobot 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="focusedinput" class="col-sm-2 control-label">C2. Atitut</label>
-                                <div class="col-sm-8">
-                                    <select name="bobot_c2" class="form-control">
-                                        <option value="1">Bobot 1</option>
-                                        <option value="2">Bobot 2</option>
-                                        <option value="3">Bobot 3</option>
-                                        <option value="4">Bobot 4</option>
-                                        <option value="5">Bobot 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="focusedinput" class="col-sm-2 control-label">C3. Loyaritas</label>
-                                <div class="col-sm-8">
-                                    <select name="bobot_c3" class="form-control">
-                                        <option value="1">Bobot 1</option>
-                                        <option value="2">Bobot 2</option>
-                                        <option value="3">Bobot 3</option>
-                                        <option value="4">Bobot 4</option>
-                                        <option value="5">Bobot 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="focusedinput" class="col-sm-2 control-label">C4. Disiplin</label>
-                                <div class="col-sm-8">
-                                    <select name="bobot_c4" class="form-control">
-                                        <option value="1">Bobot 1</option>
-                                        <option value="2">Bobot 2</option>
-                                        <option value="3">Bobot 3</option>
-                                        <option value="4">Bobot 4</option>
-                                        <option value="5">Bobot 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="focusedinput" class="col-sm-2 control-label">C5. Skill</label>
-                                <div class="col-sm-8">
-                                    <select name="bobot_c5" class="form-control">
-                                        <option value="1">Bobot 1</option>
-                                        <option value="2">Bobot 2</option>
-                                        <option value="3">Bobot 3</option>
-                                        <option value="4">Bobot 4</option>
-                                        <option value="5">Bobot 5</option>
+                                    <select name="result" class="form-control">
+                                        <?php
+                                        mysql_connect("localhost", "root", "");
+                                        mysql_select_db("guru_wp");
+                                        $nomor = 0;
+                                        error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+                                        $query = mysql_query("SELECT id, timestamp FROM result");
+                                        while ($data = mysql_fetch_array($query))
+                                        {
+                                            echo "<option value=\"{$data['id']}\">{$data['timestamp']}</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button name="submit" type="submit" class="btn btn-primary">Submit</button>
-                                    <button name="reset" type="reset" class="btn btn-default">Reset</button>
+                                    <?php
+                                    if (isset($_POST['submit']))
+                                    {
+                                        if (isset($_POST['result']))
+                                        {
+                                            mysql_connect("localhost", "root", "");
+                                            mysql_select_db("guru_wp");
+                                            $query = mysql_query("SELECT id FROM result WHERE id={$_POST['result']}");
+                                            if (!empty(mysql_fetch_array($query)))
+                                            {
+                                                echo '<button type="button" id="print_result" class="btn btn-primary">Cetak</button>';
+                                            }
+                                        }
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"></li>
-                </ol>
-
-                <div class="tab-content" id="print-area-2" class="print-area">
-                    <div class="tab-pane active" id="horizontal-form">
-
-                        <h4 align="center">Bobot yang di Pilih :
-                            <?php
-                            if (isset($_POST['submit']))
-                            {
-                                $bobot_c1 = $_POST['bobot_c1'];
-                                $bobot_c2 = $_POST['bobot_c2'];
-                                $bobot_c3 = $_POST['bobot_c3'];
-                                $bobot_c4 = $_POST['bobot_c4'];
-                                $bobot_c5 = $_POST['bobot_c5'];
-
-                                echo "C1 (<font color=blue>" . $bobot_c1 . "</font>) | C2 (<font color=blue>" . $bobot_c2
-                                    . "</font>) | C3 (<font color=blue>" . $bobot_c3 . "</font>) | C4 (<font color=blue>"
-                                    . $bobot_c4 . "</font>) | C5 (<font color=blue>" . $bobot_c5 . "</font>)";
-                            } ?>
-                        </h4>
-
-                        <h3 align="center">Perbaikan Bobot</h3>
-                        <form action="hasil.php" method="post" class="form-horizontal">
-                            <table align="center" border="1" width="80%">
-                                <thead>
-                                <tr>
-                                    <th>W1</th>
-                                    <th>W2</th>
-                                    <th>W3</th>
-                                    <th>W4</th>
-                                    <th>W5</th>
-                                </tr>
-                                <?php
-                                $result = array();
-
-                                if (isset($_POST['submit']))
-                                {
-                                    $bobot_c1 = $_POST['bobot_c1'];
-                                    $bobot_c2 = $_POST['bobot_c2'];
-                                    $bobot_c3 = $_POST['bobot_c3'];
-                                    $bobot_c4 = $_POST['bobot_c4'];
-                                    $bobot_c5 = $_POST['bobot_c5'];
-
-                                    $result['bobot']['raw'] = array(
-                                        'c1' => $bobot_c1,
-                                        'c2' => $bobot_c2,
-                                        'c3' => $bobot_c3,
-                                        'c4' => $bobot_c4,
-                                        'c5' => $bobot_c5,
-                                    );
-
-                                    echo "<tr>";
-                                    echo "<td>" . round($bobot_c1 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
-                                    echo "<td>" . round($bobot_c2 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
-                                    echo "<td>" . round($bobot_c3 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
-                                    echo "<td>" . round($bobot_c4 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
-                                    echo "<td>" . round($bobot_c5 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
-
-                                    $c1 = round($bobot_c1 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
-                                    $c2 = round($bobot_c2 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
-                                    $c3 = round($bobot_c3 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
-                                    $c4 = round($bobot_c4 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
-                                    $c5 = round($bobot_c5 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
-
-                                    $result['bobot']['computed'] = array(
-                                        'c1' => $c1,
-                                        'c2' => $c2,
-                                        'c3' => $c3,
-                                        'c4' => $c4,
-                                        'c5' => $c5,
-                                    );
-                                }
-                                ?>
-                                </thead>
-                            </table>
-                    </div>
-                    </form>
-
-
-                    <div class="tab-pane active" id="horizontal-form">
-                        <h3 align="center">Perhitungan Vektor</h3>
-
-                        <form action="hasil.php" method="post" class="form-horizontal">
-                            <div class="w3l-table-info">
-                                <table align="center" border="1" width="80%">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nik</th>
-                                        <th>Nama</th>
-                                        <th>C1.</th>
-                                        <th>C2.</th>
-                                        <th>C3.</th>
-                                        <th>C4.</th>
-                                        <th>C5.</th>
-                                        <th>Total</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    mysql_connect("localhost", "root", "");
-                                    mysql_select_db("guru_wp");
-                                    $nomor = 0;
-                                    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                                    $query = mysql_query("SELECT * FROM kriteria");
-                                    while ($data = mysql_fetch_array($query))
-                                    {
-                                        $_r = array();
-                                        $_r['nik'] = $data['nik'];
-                                        $_r['c1'] = pow($data['c1'], $c1);
-                                        $_r['c2'] = pow($data['c2'], $c2);
-                                        $_r['c3'] = pow($data['c3'], $c3);
-                                        $_r['c4'] = pow($data['c4'], $c4);
-                                        $_r['c5'] = pow($data['c5'], $c5);
-                                        $_r['res'] = pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5);
-                                        $result['res'][".{$_r['nik']}"] = $_r;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $nomor = $nomor + 1; ?></td>
-                                            <td><?php echo $data['nik']; ?></td>
-                                            <td><?php echo $data['nama']; ?></td>
-                                            <td><?php echo round(pow($data['c1'], $c1), 3); ?></td>
-                                            <td><?php echo round(pow($data['c2'], $c2), 3); ?></td>
-                                            <td><?php echo round(pow($data['c3'], $c3), 3); ?></td>
-                                            <td><?php echo round(pow($data['c4'], $c4), 3); ?></td>
-                                            <td><?php echo round(pow($data['c5'], $c5), 3); ?></td>
-                                            <td><?php echo round((pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3)
-                                                    * pow($data['c4'], $c4) * pow($data['c5'], $c5)), 2); ?></td>
-                                        </tr>
-                                    <?php }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </form>
-                    </div>
-
-
-                    <div class="tab-pane active" id="horizontal-form">
-                        <h3 align="center">Perangkingan</h3>
-                        <form action="hasil.php" method="post" class="form-horizontal">
-                            <table border="1" width="80%" align="center">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nik</th>
-                                    <th width="40%">Nama</th>
-                                    <th>Presentase</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                $query = mysql_query("SELECT nik,nama, 
-							  POWER(C1, $c1) AS C1,
-							  POWER(C2, $c2) AS C2,
-							  POWER(C3, $c3) AS C3,
-							  POWER(C4, $c4) AS C4,
-							  POWER(C5, $c5) AS C5,
-							  (
-							  POWER(C1, $c1) *
-							  POWER(C2, $c2) *
-							  POWER(C3, $c3) *
-							  POWER(C4, $c4) *
-							  POWER(C5, $c5)
-							  ) AS TOTAL,
-							  SUM(
-							  POWER(C1, $c1) *
-							  POWER(C2, $c2) *
-							  POWER(C3, $c3) *
-							  POWER(C4, $c4) *
-							  POWER(C5, $c5)
-							  ) AS GRANDTOTAL
-
-							  FROM kriteria");
-                                $q = mysql_fetch_array($query);
-                                ?>
-                                <?php
-                                $nomor = 0;
-                                $query = mysql_query("SELECT * FROM kriteria");
-                                $res_dis = array();
-                                while ($data = mysql_fetch_array($query))
-                                {
-                                    $_rd = array();
-                                    $_rd['nik'] = $data['nik'];
-                                    $_rd['nama'] = $data['nama'];
-                                    $_rd['rnk'] = (pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5)) / $q['GRANDTOTAL'];
-                                    $res_dis[".{$data['nik']}"] = $_rd;
-
-
-                                    $result['res'][".{$data['nik']}"]['rnk'] = (pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5)) / $q['GRANDTOTAL'];
-                                    ?>
-                                    <?php
-                                }
-
-                                if (isset($_POST['submit']))
-                                {
-                                    usort($res_dis, function ($c1, $c2) {
-                                        if ($c1['rnk'] == $c2['rnk'])
-                                        {
-                                            return 0;
-                                        }
-
-                                        return ($c1['rnk'] < $c2['rnk']) ? 1 : -1;
-                                    });
-
-
-                                    //var_dump($result);
-                                }
-                                else
-                                {
-                                    usort($res_dis, function ($c1, $c2) {
-                                        if ($c1['nik'] == $c2['nik'])
-                                        {
-                                            return 0;
-                                        }
-
-                                        return ($c1['nik'] < $c2['nik']) ? -1 : 1;
-                                    });
-                                }
-
-                                foreach ($res_dis as $k => $v)
-                                {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $k ?></td>
-                                        <td><?php echo $v['nik'] ?></td>
-                                        <td><?php echo $v['nama']; ?></td>
-                                        <td><?php echo round($v['rnk'], 3); ?></td>
-                                    </tr>
-                                    <?php
-                                }
-
-
-                                if (isset($_POST['submit']))
-                                {
-                                    $_json = json_encode($result);
-                                    echo "<script>  var result = {$_json}</script>";
-                                }
-                                else
-                                {
-                                    echo "<script>  var result = undefined</script>";
-                                }
-                                ?>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                </div>
-                <div>
-                    <!--<a class="btn btn-primary" href="javascript:printDiv('print-area-2');">Print</a>-->
-                    <?php
-                    if (isset($_POST['submit']))
-                    {
-                        echo '<button type="button" id="submit_result" class="btn btn-primary">Simpan Perhitungan</button>';
-                    }
-                    ?>
-
-                </div>
             </div>
+            <?php
+            if (isset($_POST['submit']))
+            {
+                if (isset($_POST['result']))
+                {
+                    mysql_connect("localhost", "root", "");
+                    mysql_select_db("guru_wp");
+                    $query = mysql_query("SELECT id FROM result WHERE id={$_POST['result']}");
+                    if (!empty(mysql_fetch_array($query)))
+                    {
 
-            <textarea id="printing-css" style="display:none;">html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}body{font:normal normal .8125em/1.4 Arial,Sans-Serif;background-color:white;color:#333}strong,b{font-weight:bold}cite,em,i{font-style:italic}a{text-decoration:none}a:hover{text-decoration:underline}a img{border:none}abbr,acronym{border-bottom:1px dotted;cursor:help}sup,sub{vertical-align:baseline;position:relative;top:-.4em;font-size:86%}sub{top:.4em}small{font-size:86%}kbd{font-size:80%;border:1px solid #999;padding:2px 5px;border-bottom-width:2px;border-radius:3px}mark{background-color:#ffce00;color:black}p,blockquote,pre,table,figure,hr,form,ol,ul,dl{margin:1.5em 0}hr{height:1px;border:none;background-color:#666}h1,h2,h3,h4,h5,h6{font-weight:bold;line-height:normal;margin:1.5em 0 0}h1{font-size:200%}h2{font-size:180%}h3{font-size:160%}h4{font-size:140%}h5{font-size:120%}h6{font-size:100%}ol,ul,dl{margin-left:3em}ol{list-style:decimal outside}ul{list-style:disc outside}li{margin:.5em 0}dt{font-weight:bold}dd{margin:0 0 .5em 2em}input,button,select,textarea{font:inherit;font-size:100%;line-height:normal;vertical-align:baseline}textarea{display:block;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}pre,code{font-family:"Courier New",Courier,Monospace;color:inherit}pre{white-space:pre;word-wrap:normal;overflow:auto}blockquote{margin-left:2em;margin-right:2em;border-left:4px solid #ccc;padding-left:1em;font-style:italic}table[border="1"] th,table[border="1"] td,table[border="1"] caption{border:1px solid;padding:.5em 1em;text-align:left;vertical-align:top}th{font-weight:bold}table[border="1"] caption{border:none;font-style:italic}.no-print{display:none}</textarea>
-            <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
+                        ?>
+                        <div class="grid-form1" id="print-container">
+                            <div class="tab-content" id="print-area-2" class="print-area">
+                                <div class="tab-pane active" id="horizontal-form">
+
+                                    <h4 align="center">Bobot yang di Pilih :
+                                        <?php
+                                        mysql_connect("localhost", "root", "");
+                                        mysql_select_db("guru_wp");
+                                        $query = mysql_query("SELECT `id`, `timestamp`, `cr1`, `cr2`, `cr3`, `cr4`, `cr5`, `cc1`, `cc2`, `cc3`, `cc4`, `cc5` FROM result WHERE id={$_POST['result']}");
+                                        $result = mysql_fetch_assoc($query);
+                                        if (isset($result))
+                                        {
+                                            $bobot_c1 = $result['cr1'];
+                                            $bobot_c2 = $result['cr2'];
+                                            $bobot_c3 = $result['cr3'];
+                                            $bobot_c4 = $result['cr4'];
+                                            $bobot_c5 = $result['cr5'];
+
+                                            echo "C1 (<font color=blue>" . $bobot_c1 . "</font>) | C2 (<font color=blue>" . $bobot_c2
+                                                . "</font>) | C3 (<font color=blue>" . $bobot_c3 . "</font>) | C4 (<font color=blue>"
+                                                . $bobot_c4 . "</font>) | C5 (<font color=blue>" . $bobot_c5 . "</font>)";
+                                        } ?>
+                                    </h4>
+
+                                    <h3 align="center">Perbaikan Bobot</h3>
+                                    <form action="hasil.php" method="post" class="form-horizontal">
+                                        <table align="center" border="1" width="80%">
+                                            <thead>
+                                            <tr>
+                                                <th>W1</th>
+                                                <th>W2</th>
+                                                <th>W3</th>
+                                                <th>W4</th>
+                                                <th>W5</th>
+                                            </tr>
+                                            <?php
+
+                                            if (isset($_POST['submit']))
+                                            {
+                                                $bobot_c1 = $result['cc1'];
+                                                $bobot_c2 = $result['cc2'];
+                                                $bobot_c3 = $result['cc3'];
+                                                $bobot_c4 = $result['cc4'];
+                                                $bobot_c5 = $result['cc5'];
+
+                                                echo "<tr>";
+                                                echo "<td>" . round($bobot_c1 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
+                                                echo "<td>" . round($bobot_c2 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
+                                                echo "<td>" . round($bobot_c3 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
+                                                echo "<td>" . round($bobot_c4 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
+                                                echo "<td>" . round($bobot_c5 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
+
+                                                $c1 = round($bobot_c1 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+                                                $c2 = round($bobot_c2 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+                                                $c3 = round($bobot_c3 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+                                                $c4 = round($bobot_c4 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+                                                $c5 = round($bobot_c5 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+                                            }
+                                            ?>
+                                            </thead>
+                                        </table>
+                                </div>
+                                </form>
+
+
+                                <div class="tab-pane active" id="horizontal-form">
+                                    <h3 align="center">Perhitungan Vektor</h3>
+
+                                    <form action="hasil.php" method="post" class="form-horizontal">
+                                        <div class="w3l-table-info">
+                                            <table align="center" border="1" width="80%">
+                                                <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Nik</th>
+                                                    <th>Nama</th>
+                                                    <th>C1.</th>
+                                                    <th>C2.</th>
+                                                    <th>C3.</th>
+                                                    <th>C4.</th>
+                                                    <th>C5.</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                $result = array();
+                                                mysql_connect("localhost", "root", "");
+                                                mysql_select_db("guru_wp");
+                                                $query = mysql_query("SELECT `result_kriteria`.`result`, `result_kriteria`.`nik`, `guru`.`nama`, `result_kriteria`.`c1`, `result_kriteria`.`c2`, `result_kriteria`.`c3`, `result_kriteria`.`c4`, `result_kriteria`.`c5`, `result_kriteria`.`res`, `result_kriteria`.`rnk` FROM `result_kriteria` LEFT OUTER JOIN `guru` ON `result_kriteria`.`nik` = `guru`.`nik` WHERE `result_kriteria`.`result`={$_POST['result']} ORDER BY `guru`.`nik` ASC");
+                                                while ($data = mysql_fetch_assoc($query))
+                                                {
+                                                    $result[".{$data['nik']}"] = $data;
+                                                }
+                                                $nomor = 0;
+                                                foreach ($result as $data)
+                                                {
+                                                    ++$nomor
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo($nomor) ?></td>
+                                                        <td><?php echo $data['nik']; ?></td>
+                                                        <td><?php echo $data['nama']; ?></td>
+                                                        <td><?php echo round($data['c1'], 3); ?></td>
+                                                        <td><?php echo round($data['c2'], 3); ?></td>
+                                                        <td><?php echo round($data['c3'], 3); ?></td>
+                                                        <td><?php echo round($data['c4'], 3); ?></td>
+                                                        <td><?php echo round($data['c5'], 3); ?></td>
+                                                        <td><?php echo round($data['res'], 2); ?></td>
+                                                    </tr>
+                                                <?php }
+                                                $nomor = 0;
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                                <div class="tab-pane active" id="horizontal-form">
+                                    <h3 align="center">Perangkingan</h3>
+                                    <form action="hasil.php" method="post" class="form-horizontal">
+                                        <table border="1" width="80%" align="center">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nik</th>
+                                                <th width="40%">Nama</th>
+                                                <th>Presentase</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            $nomor = 0;
+
+                                            usort($result, function ($c1, $c2) {
+                                                if ($c1['rnk'] == $c2['rnk'])
+                                                {
+                                                    return 0;
+                                                }
+
+                                                return ($c1['rnk'] < $c2['rnk']) ? 1 : -1;
+                                            });
+
+
+                                            $nomor = 0;
+                                            foreach ($result as $k => $v)
+                                            {
+                                                ++$nomor;
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $nomor ?></td>
+                                                    <td><?php echo $v['nik'] ?></td>
+                                                    <td><?php echo $v['nama']; ?></td>
+                                                    <td><?php echo round($v['rnk'], 3); ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+                    }
+                }
+            }
+            ?>
 
             <!--end pilih bobot-->
 
@@ -471,7 +338,7 @@
         </script>
         <!-- /script-for sticky-nav -->
         <!--inner block start here-->
-        <div class="inner-block">
+        <div class="inner-block" style="margin-top: 20px">
 
         </div>
         <!--inner block end here-->
@@ -574,25 +441,24 @@
 <script src="js/scripts.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jQuery.print.min.js"></script>
 <!-- /Bootstrap Core JavaScript -->
 <script>
-    $(document).on('click', 'button#submit_result', function (event) {
-        if ((result !== undefined) && (result !== null))
-        {
-            console.log(result);
-            $.ajax({
-                type: 'post',
-                url: '/admin/submit.php',
-                data: result,
-                dataType: 'json'
-            }).done(function (response) {
-                if ((response !== undefined) && (response !== null))
-                {
-                    alert('Perhitungan Berhasil Disimpan');
-                    $("button#submit_result").attr('disabled', 'disabled');
-                }
-            });
-        }
+    $(document).on('click', 'button#print_result', function (event) {
+        $("div#print-container").print({
+            globalStyles: true,
+            mediaPrint: false,
+            stylesheet: null,
+            noPrintSelector: ".no-print",
+            iframe: true,
+            append: null,
+            prepend: null,
+            manuallyCopyFormValues: true,
+            deferred: $.Deferred(),
+            timeout: 750,
+            title: null,
+            doctype: '<!doctype html>'
+        });
     });
 
 </script>
