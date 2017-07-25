@@ -401,11 +401,13 @@
                                     });
                                 }
 
+                                $nomor = 0;
                                 foreach ($res_dis as $k => $v)
                                 {
+                                    ++$nomor;
                                     ?>
                                     <tr>
-                                        <td><?php echo $k ?></td>
+                                        <td><?php echo $nomor ?></td>
                                         <td><?php echo $v['nik'] ?></td>
                                         <td><?php echo $v['nama']; ?></td>
                                         <td><?php echo round($v['rnk'], 3); ?></td>
