@@ -412,6 +412,17 @@
                                     </tr>
                                     <?php
                                 }
+
+
+                                if (isset($_POST['submit']))
+                                {
+                                    $_json = json_encode($result);
+                                    echo "<script>  var result = {$_json}</script>";
+                                }
+                                else
+                                {
+                                    echo "<script>  var result = undefined</script>";
+                                }
                                 ?>
                                 </tbody>
                             </table>
@@ -419,7 +430,14 @@
                     </div>
                 </div>
                 <div>
-                    <a class="btn btn-primary" href="javascript:printDiv('print-area-2');">Print</a>
+                    <!--<a class="btn btn-primary" href="javascript:printDiv('print-area-2');">Print</a>-->
+                    <?php
+                    if (isset($_POST['submit']))
+                    {
+                        echo '<button type="button" id="submit_result" class="btn btn-primary">Simpan Perhitungan</button>';
+                    }
+                    ?>
+
                 </div>
             </div>
 
@@ -550,6 +568,26 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 <!-- /Bootstrap Core JavaScript -->
+<script>
+    $(document).on('click', 'button#submit_result', function (event) {
+        if ((result !== undefined) && (result !== null))
+        {
+            console.log(result);
+            $.ajax({
+                type: 'post',
+                url: '/admin/submit.php',
+                data: result,
+                dataType: 'json'
+            }).done(function (response) {
+                if ((response !== undefined) && (response !== null))
+                {
+                    alert('Perhitungan Berhasil Disimpan');
+                    $("button#submit_result").attr('disabled', 'disabled');
+                }
+            });
+        }
+    });
 
+</script>
 </body>
 </html>
