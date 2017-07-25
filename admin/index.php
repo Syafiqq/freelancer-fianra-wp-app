@@ -169,6 +169,13 @@
                         <div class="clearfix"></div>
                     </a>
                 </li>
+                <li>
+                    <a href="print.php">
+                        <i class="fa fa-print"></i>
+                        <span>Laporan</span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
