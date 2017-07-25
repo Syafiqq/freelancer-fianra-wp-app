@@ -214,6 +214,8 @@
                                     <th>W5</th>
                                 </tr>
                                 <?php
+                                $result = array();
+
                                 if (isset($_POST['submit']))
                                 {
                                     $bobot_c1 = $_POST['bobot_c1'];
@@ -221,6 +223,15 @@
                                     $bobot_c3 = $_POST['bobot_c3'];
                                     $bobot_c4 = $_POST['bobot_c4'];
                                     $bobot_c5 = $_POST['bobot_c5'];
+
+                                    $result['bobot']['raw'] = array(
+                                        'c1' => $bobot_c1,
+                                        'c2' => $bobot_c2,
+                                        'c3' => $bobot_c3,
+                                        'c4' => $bobot_c4,
+                                        'c5' => $bobot_c5,
+                                    );
+
                                     echo "<tr>";
                                     echo "<td>" . round($bobot_c1 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
                                     echo "<td>" . round($bobot_c2 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2) . "</td>";
@@ -233,6 +244,14 @@
                                     $c3 = round($bobot_c3 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
                                     $c4 = round($bobot_c4 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
                                     $c5 = round($bobot_c5 / ($bobot_c1 + $bobot_c2 + $bobot_c3 + $bobot_c4 + $bobot_c5), 2);
+
+                                    $result['bobot']['computed'] = array(
+                                        'c1' => $c1,
+                                        'c2' => $c2,
+                                        'c3' => $c3,
+                                        'c4' => $c4,
+                                        'c5' => $c5,
+                                    );
                                 }
                                 ?>
                                 </thead>
@@ -266,9 +285,18 @@
                                     mysql_select_db("guru_wp");
                                     $nomor = 0;
                                     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                                    $query = mysql_query("select * from kriteria");
+                                    $query = mysql_query("SELECT * FROM kriteria");
                                     while ($data = mysql_fetch_array($query))
                                     {
+                                        $_r = array();
+                                        $_r['nik'] = $data['nik'];
+                                        $_r['c1'] = pow($data['c1'], $c1);
+                                        $_r['c2'] = pow($data['c2'], $c2);
+                                        $_r['c3'] = pow($data['c3'], $c3);
+                                        $_r['c4'] = pow($data['c4'], $c4);
+                                        $_r['c5'] = pow($data['c5'], $c5);
+                                        $_r['res'] = pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5);
+                                        $result['res'][".{$_r['nik']}"] = $_r;
                                         ?>
                                         <tr>
                                             <td><?php echo $nomor = $nomor + 1; ?></td>
@@ -282,7 +310,8 @@
                                             <td><?php echo round((pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3)
                                                     * pow($data['c4'], $c4) * pow($data['c5'], $c5)), 2); ?></td>
                                         </tr>
-                                    <?php } ?>
+                                    <?php }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -330,19 +359,60 @@
                                 ?>
                                 <?php
                                 $nomor = 0;
-                                $query = mysql_query("select * from kriteria");
+                                $query = mysql_query("SELECT * FROM kriteria");
+                                $res_dis = array();
                                 while ($data = mysql_fetch_array($query))
+                                {
+                                    $_rd = array();
+                                    $_rd['nik'] = $data['nik'];
+                                    $_rd['nama'] = $data['nama'];
+                                    $_rd['rnk'] = (pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5)) / $q['GRANDTOTAL'];
+                                    $res_dis[".{$data['nik']}"] = $_rd;
+
+
+                                    $result['res'][".{$data['nik']}"]['rnk'] = (pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3) * pow($data['c4'], $c4) * pow($data['c5'], $c5)) / $q['GRANDTOTAL'];
+                                    ?>
+                                    <?php
+                                }
+
+                                if (isset($_POST['submit']))
+                                {
+                                    usort($res_dis, function ($c1, $c2) {
+                                        if ($c1['rnk'] == $c2['rnk'])
+                                        {
+                                            return 0;
+                                        }
+
+                                        return ($c1['rnk'] < $c2['rnk']) ? 1 : -1;
+                                    });
+
+
+                                    //var_dump($result);
+                                }
+                                else
+                                {
+                                    usort($res_dis, function ($c1, $c2) {
+                                        if ($c1['nik'] == $c2['nik'])
+                                        {
+                                            return 0;
+                                        }
+
+                                        return ($c1['nik'] < $c2['nik']) ? -1 : 1;
+                                    });
+                                }
+
+                                foreach ($res_dis as $k => $v)
                                 {
                                     ?>
                                     <tr>
-                                        <td><?php echo $nomor = $nomor + 1; ?></td>
-                                        <td><?php echo $data['nik']; ?></td>
-                                        <td><?php echo $data['nama']; ?></td>
-                                        <td><?php echo round((pow($data['c1'], $c1) * pow($data['c2'], $c2) * pow($data['c3'], $c3)
-                                                    * pow($data['c4'], $c4) * pow($data['c5'], $c5)) / $q['GRANDTOTAL'], 3); ?></td>
+                                        <td><?php echo $k ?></td>
+                                        <td><?php echo $v['nik'] ?></td>
+                                        <td><?php echo $v['nama']; ?></td>
+                                        <td><?php echo round($v['rnk'], 3); ?></td>
                                     </tr>
                                     <?php
-                                } ?>
+                                }
+                                ?>
                                 </tbody>
                             </table>
                         </form>
